@@ -25,6 +25,10 @@ if DEBUG == 1:
     save_freq = 2
     train_ids = train_ids[0:5]
 
+# Yahya: Loss and epoch arrays
+losses_array = []
+epoch_count = range(1, 4001)
+
 
 def lrelu(x):
     return tf.maximum(x * 0.2, x)
@@ -189,7 +193,7 @@ for epoch in range(lastepoch, 4001):
                                         feed_dict={in_image: input_patch, gt_image: gt_patch, lr: learning_rate})
         output = np.minimum(np.maximum(output, 0), 1)
         g_loss[ind] = G_current
-
+        losses_array.append(np.mean(g_loss[np.where(g_loss)]))
         print("%d %d Loss=%.3f Time=%.3f" % (epoch, cnt, np.mean(g_loss[np.where(g_loss)]), time.time() - st))
 
         if epoch % save_freq == 0:
